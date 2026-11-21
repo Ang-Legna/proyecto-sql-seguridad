@@ -1,0 +1,76 @@
+{
+  "$schema": "https://github.com/Azure/data-api-builder/releases/latest/download/dab.draft.schema.json",
+  "data-source": {
+    "database-type": "mssql",
+    "connection-string": "@env('DATABASE_CONNECTION_STRING')"
+  },
+  "runtime": {
+    "rest": {
+      "enabled": true,
+      "path": "/api"
+    },
+    "graphql": {
+      "enabled": true,
+      "path": "/graphql",
+      "allow-introspection": false
+    }
+  },
+  "authentication": {
+    "provider": "AzureAD",
+    "jwt": {
+      "audience": "api://my-graphql-api",
+      "issuer": "https://login.microsoftonline.com/{tenant-id}/v2.0"
+    }
+  },
+  "entities": {
+    "Customer": {
+      "source": "dbo.Customers",
+      "permissions": [
+        {
+          "role": "authenticated",
+          "actions": ["read"]
+        },
+        {
+          "role": "admin",
+          "actions": ["*"]
+        }
+      ]
+    },
+    "Order": {
+      "source": "dbo.Orders",
+      "permissions": [
+        {
+          "role": "authenticated",
+          "actions": ["read"],
+          "fields": {
+            "include": ["OrderID", "OrderDate", "TotalAmount"],
+            "exclude": ["InternalNotes", "CostPrice"]
+          }
+        }
+      ]
+    },
+    "Product": {
+      "source": "dbo.Products",
+      "rest": {
+        "enabled": true,
+        "path": "/products"
+      },
+      "permissions": [
+        {
+          "role": "anonymous",
+          "actions": [
+            { "action": "read", "policy": { "database": "@item.IsPublic eq true" } }
+          ]
+        },
+        {
+          "role": "inventory-manager",
+          "actions": ["create", "read", "update"]
+        },
+        {
+          "role": "admin",
+          "actions": ["*"]
+        }
+      ]
+    }
+  }
+}

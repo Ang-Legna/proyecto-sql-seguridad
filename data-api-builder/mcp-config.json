@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "sqlDatabase": {
+      "transport": "stdio",
+      "authentication": {
+        "type": "azure-identity",
+        "scope": "https://database.windows.net/.default"
+      },
+      "security": {
+        "allowedOperations": ["read"],
+        "deniedTables": ["dbo.Passwords", "dbo.APIKeys"],
+        "maxRowsReturned": 1000
+      }
+    }
+  }
+}
