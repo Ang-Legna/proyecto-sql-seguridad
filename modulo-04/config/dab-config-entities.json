@@ -1,0 +1,115 @@
+{
+  "$schema": "https://github.com/Azure/data-api-builder/releases/download/v1.1.7/dab.draft.schema.json",
+  "data-source": {
+    "database-type": "mssql",
+    "connection-string": "@env('DATABASE_CONNECTION_STRING')",
+    "options": {
+      "set-session-context": true
+    }
+  },
+  "runtime": {
+    "rest": {
+      "enabled": true,
+      "path": "/api",
+      "request-body-strict": true
+    },
+    "graphql": {
+      "enabled": true,
+      "path": "/graphql",
+      "allow-introspection": false,
+      "depth-limit": 8,
+      "multiple-mutations": {
+        "create": { "enabled": true }
+      }
+    },
+    "host": {
+      "cors": {
+        "origins": ["https://portal-utp.azurewebsites.net"],
+        "allow-credentials": true
+      },
+      "mode": "production"
+    },
+    "cache": {
+      "enabled": true,
+      "ttl-seconds": 5
+    }
+  },
+  "entities": {
+    "Product": {
+      "source": {
+        "object": "dbo.Products",
+        "type": "table"
+      },
+      "mappings": {
+        "ProductID": "id",
+        "ProductName": "name",
+        "UnitPrice": "price",
+        "UnitsInStock": "stockQuantity"
+      },
+      "relationships": {
+        "category": {
+          "cardinality": "one",
+          "target.entity": "Category",
+          "source.fields": ["CategoryID"],
+          "target.fields": ["CategoryID"]
+        }
+      },
+      "rest": {
+        "enabled": true,
+        "path": "/products",
+        "methods": {
+          "get": true,
+          "post": true,
+          "put": false,
+          "patch": true,
+          "delete": true
+        }
+      },
+      "graphql": {
+        "enabled": true,
+        "type": {
+          "singular": "product",
+          "plural": "products"
+        },
+        "cache": {
+          "enabled": true,
+          "ttl-seconds": 60
+        }
+      },
+      "permissions": [
+        {
+          "role": "anonymous",
+          "actions": ["read"]
+        },
+        {
+          "role": "authenticated",
+          "actions": ["create", "read", "update", "delete"]
+        }
+      ]
+    },
+    "Category": {
+      "source": {
+        "object": "dbo.Categories",
+        "type": "table"
+      },
+      "relationships": {
+        "products": {
+          "cardinality": "many",
+          "target.entity": "Product",
+          "source.fields": ["CategoryID"],
+          "target.fields": ["CategoryID"]
+        }
+      },
+      "graphql": {
+        "enabled": true,
+        "operation": "query"
+      },
+      "permissions": [
+        {
+          "role": "anonymous",
+          "actions": ["read"]
+        }
+      ]
+    }
+  }
+}
