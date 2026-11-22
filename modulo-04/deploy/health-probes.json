@@ -1,0 +1,20 @@
+{
+  "probes": [
+    {
+      "type": "liveness",
+      "httpGet": {
+        "path": "/",
+        "port": 5000
+      },
+      "periodSeconds": 30
+    },
+    {
+      "type": "readiness",
+      "httpGet": {
+        "path": "/api/Product?$first=1",
+        "port": 5000
+      },
+      "periodSeconds": 10
+    }
+  ]
+}

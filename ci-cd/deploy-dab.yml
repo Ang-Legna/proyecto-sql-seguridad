@@ -1,0 +1,33 @@
+name: Deploy Data API Builder
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'modulo-04/config/dab-config*.json'
+      - 'modulo-04/deploy/Dockerfile'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and push container
+        run: |
+          docker build --build-arg ENVIRONMENT=production -f modulo-04/deploy/Dockerfile -t ${{ secrets.ACR_LOGIN_SERVER }}/dab-api:${{ github.sha }} .
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/dab-api:${{ github.sha }}
+
+      - name: Deploy to Container Apps
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          resourceGroup: myResourceGroup
+          containerAppName: dab-api
+          imageToDeploy: ${{ secrets.ACR_LOGIN_SERVER }}/dab-api:${{ github.sha }}
