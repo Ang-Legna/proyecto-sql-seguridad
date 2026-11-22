@@ -1,0 +1,107 @@
+{
+  "$schema": "https://github.com/Azure/data-api-builder/releases/download/v1.1.7/dab.draft.schema.json",
+  "entities": {
+    "ProductInventory": {
+      "source": {
+        "object": "dbo.ProductInventory",
+        "type": "view",
+        "key-fields": ["ProductID"]
+      },
+      "rest": {
+        "enabled": true,
+        "path": "/inventory"
+      },
+      "graphql": {
+        "enabled": true,
+        "operation": "query"
+      },
+      "permissions": [
+        { "role": "anonymous", "actions": ["read"] }
+      ]
+    },
+    "GetProductsByPriceRange": {
+      "source": {
+        "object": "dbo.GetProductsByPriceRange",
+        "type": "stored-procedure",
+        "parameters": {
+          "MinPrice": "minPrice",
+          "MaxPrice": "maxPrice"
+        }
+      },
+      "rest": {
+        "enabled": true,
+        "path": "/products/by-price-range",
+        "methods": { "get": true, "post": true }
+      },
+      "graphql": {
+        "enabled": true,
+        "operation": "query"
+      },
+      "permissions": [
+        { "role": "authenticated", "actions": ["execute"] }
+      ]
+    },
+    "CreateOrder": {
+      "source": {
+        "object": "dbo.CreateOrder",
+        "type": "stored-procedure",
+        "parameters": {
+          "CustomerID": "customerId",
+          "ProductID": "productId",
+          "Quantity": "quantity"
+        }
+      },
+      "rest": {
+        "enabled": true,
+        "methods": { "post": true }
+      },
+      "graphql": {
+        "enabled": true,
+        "operation": "mutation"
+      },
+      "permissions": [
+        { "role": "authenticated", "actions": ["execute"] }
+      ]
+    },
+    "Order": {
+      "source": { "object": "dbo.Orders", "type": "table" },
+      "relationships": {
+        "customer": {
+          "cardinality": "one",
+          "target.entity": "Customer",
+          "source.fields": ["CustomerID"],
+          "target.fields": ["CustomerID"]
+        },
+        "orderDetails": {
+          "cardinality": "many",
+          "target.entity": "OrderDetail",
+          "source.fields": ["OrderID"],
+          "target.fields": ["OrderID"]
+        }
+      },
+      "permissions": [
+        { "role": "authenticated", "actions": ["read"] }
+      ]
+    },
+    "OrderDetail": {
+      "source": { "object": "dbo.OrderDetails", "type": "table" },
+      "relationships": {
+        "order": {
+          "cardinality": "one",
+          "target.entity": "Order",
+          "source.fields": ["OrderID"],
+          "target.fields": ["OrderID"]
+        },
+        "product": {
+          "cardinality": "one",
+          "target.entity": "Product",
+          "source.fields": ["ProductID"],
+          "target.fields": ["ProductID"]
+        }
+      },
+      "permissions": [
+        { "role": "authenticated", "actions": ["read"] }
+      ]
+    }
+  }
+}
