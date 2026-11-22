@@ -1,0 +1,55 @@
+// ============================================================================
+// MÓDULO 4 - UNIDAD 6: CONSULTAS DE OBSERVABILIDAD EN AZURE MONITOR (KQL)
+// ============================================================================
+
+// 1. Resumen ejecutivo de métricas de solicitud (24 horas: volumen, promedio, P95 y tasa de error)
+requests
+| where timestamp > ago(24h)
+| summarize
+    RequestCount = count(),
+    AvgDuration = avg(duration),
+    P95Duration = percentile(duration, 95),
+    FailureRate = countif(success == false) * 100.0 / count()
+| project RequestCount, AvgDuration, P95Duration, FailureRate;
+
+// 2. Top 10 puntos de conexión (endpoints) más lentos en la última hora
+requests
+| where timestamp > ago(1h)
+| summarize
+    AvgDuration = avg(duration),
+    RequestCount = count()
+    by name
+| top 10 by AvgDuration desc
+| project name, AvgDuration, RequestCount;
+
+// 3. Diagnóstico de errores y excepciones en contenedores DAB (Log Analytics)
+ContainerAppConsoleLogs_CL
+| where ContainerName_s == "dab-api"
+| where Log_s contains "error" or Log_s contains "exception"
+| project TimeGenerated, Log_s
+| order by TimeGenerated desc;
+
+// 4. Alerta de degradación del tiempo de respuesta (latencia P95 > 2000 ms en ventana de 5 min)
+requests
+| where timestamp > ago(5m)
+| summarize P95 = percentile(duration, 95) by bin(timestamp, 1m)
+| where P95 > 2000;
+
+// 5. Top 20 consultas SQL más lentas ejecutadas por DAB (Application Insights Dependencies)
+dependencies
+| where timestamp > ago(1h)
+| where type == "SQL"
+| summarize
+    CallCount = count(),
+    AvgDuration = avg(duration),
+    FailureCount = countif(success == false)
+    by data
+| top 20 by AvgDuration desc;
+
+// 6. Tendencia histórica de latencia de base de datos por hora
+dependencies
+| where type == "SQL"
+| summarize
+    AvgDuration = avg(duration)
+    by bin(timestamp, 1h)
+| render timechart;
