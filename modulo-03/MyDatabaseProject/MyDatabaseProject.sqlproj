@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build">
   <Sdk Name="Microsoft.Build.Sql" Version="2.3.0" />
   <PropertyGroup>
@@ -7,4 +7,10 @@
     <ModelCollation>1033, CI</ModelCollation>
     <ProjectGuid>3838BE81-9FE9-43B6-8322-CF184DE6566E</ProjectGuid>
   </PropertyGroup>
+  <ItemGroup>
+    <PreDeploy Include="prep-db.sql" />
+    <PostDeploy Include="PostDeploy.sql" />
+    <Build Remove="Scripts\PostDeployment\seed-statuses.sql" />
+    <None Include="Scripts\PostDeployment\seed-statuses.sql" />
+  </ItemGroup>
 </Project>
