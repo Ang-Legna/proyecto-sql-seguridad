@@ -1,0 +1,6 @@
+C:\Users\Administrador\proyecto-sql-seguridad\modulo-03\MyDatabaseProject\bin\Debug\MyDatabaseProject.dacpac
+C:\Users\Administrador\proyecto-sql-seguridad\modulo-03\MyDatabaseProject\obj\Debug\Model.xml
+C:\Users\Administrador\proyecto-sql-seguridad\modulo-03\MyDatabaseProject\obj\Debug\refactor.xml
+C:\Users\Administrador\proyecto-sql-seguridad\modulo-03\MyDatabaseProject\obj\Debug\postdeploy.sql
+C:\Users\Administrador\proyecto-sql-seguridad\modulo-03\MyDatabaseProject\obj\Debug\predeploy.sql
+C:\Users\Administrador\proyecto-sql-seguridad\modulo-03\MyDatabaseProject\obj\Debug\preplan.sql
