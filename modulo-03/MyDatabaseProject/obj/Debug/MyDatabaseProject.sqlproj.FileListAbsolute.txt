@@ -4,3 +4,4 @@ C:\Users\Administrador\proyecto-sql-seguridad\modulo-03\MyDatabaseProject\obj\De
 C:\Users\Administrador\proyecto-sql-seguridad\modulo-03\MyDatabaseProject\obj\Debug\postdeploy.sql
 C:\Users\Administrador\proyecto-sql-seguridad\modulo-03\MyDatabaseProject\obj\Debug\predeploy.sql
 C:\Users\Administrador\proyecto-sql-seguridad\modulo-03\MyDatabaseProject\obj\Debug\preplan.sql
+C:\Users\Administrador\proyecto-sql-seguridad\modulo-03\cicd-templates\artifact-output\MyDatabaseProject.dacpac

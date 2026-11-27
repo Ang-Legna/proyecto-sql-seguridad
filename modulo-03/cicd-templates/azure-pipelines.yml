@@ -1,0 +1,37 @@
+﻿trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - modulo-03/MyDatabaseProject/*
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+  - task: DotNetCoreCLI@2
+    displayName: 'Build SQL Database Project'
+    inputs:
+      command: 'build'
+      projects: './modulo-03/MyDatabaseProject/MyDatabaseProject.sqlproj'
+      arguments: '-o $(Build.ArtifactStagingDirectory)'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish DACPAC Artifact'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/MyDatabaseProject.dacpac'
+      ArtifactName: 'dacpac'
+
+  - task: SqlAzureDacpacDeployment@1
+    displayName: 'Deploy DACPAC to Azure SQL'
+    inputs:
+      azureSubscription: 'your-service-connection'
+      AuthenticationType: 'server'
+      ServerName: 'your-server.database.windows.net'
+      DatabaseName: 'LabDevOpsSQL'
+      SqlUsername: '$(SqlUser)'
+      SqlPassword: '$(SqlPassword)'
+      deployType: 'DacpacTask'
+      DeploymentAction: 'Publish'
+      DacpacFile: '$(Build.ArtifactStagingDirectory)/MyDatabaseProject.dacpac'

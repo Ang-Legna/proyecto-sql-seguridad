@@ -1,0 +1,3 @@
+﻿# .github/CODEOWNERS - RevisiÃ³n obligatoria para cambios de esquema
+/modulo-03/MyDatabaseProject/ @db-team
+*.sql @db-team @dba-lead
