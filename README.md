@@ -59,3 +59,4 @@ proyecto-sql-seguridad/
 ├── ci-cd/                          # Pipelines y scripts de validación automatizada de esquemas
 ├── evidencias-pdf/                 # Informes ejecutivos con portada institucional UTP y capturas verificadas
 └── README.md                       # Documentación técnica principal del proyecto
+
