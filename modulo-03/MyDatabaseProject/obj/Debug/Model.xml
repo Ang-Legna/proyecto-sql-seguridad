@@ -369,6 +369,73 @@
 				</Entry>
 			</Relationship>
 		</Element>
+		<Element Type="SqlProcedure" Name="[dbo].[usp_CancelOrder]">
+			<Property Name="BodyScript">
+				<Value><![CDATA[
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @CurrentStatus INT;
+    SELECT @CurrentStatus = [StatusID] FROM [dbo].[Orders] WHERE [OrderID] = @OrderID;
+
+    IF @CurrentStatus IS NULL
+        THROW 50002, 'El pedido especificado no existe.', 1;
+
+    -- Si el pedido ya fue entregado (StatusID = 4), lanzar error controlado (Severity 16, State 1)
+    IF @CurrentStatus = 4
+        THROW 50001, 'No se puede cancelar un pedido que ya fue entregado.', 1;
+
+    UPDATE [dbo].[Orders]
+    SET [StatusID] = 5 -- Cancelled
+    WHERE [OrderID] = @OrderID;
+END;]]></Value>
+			</Property>
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="BodyDependencies">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[int]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Orders]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Orders].[StatusID]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[Orders].[OrderID]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[usp_CancelOrder].[@OrderID]" />
+				</Entry>
+			</Relationship>
+			<Relationship Name="Parameters">
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[usp_CancelOrder].[@OrderID]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SysCommentsObjectAnnotation">
+				<Property Name="Length" Value="622" />
+				<Property Name="StartLine" Value="1" />
+				<Property Name="StartColumn" Value="1" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[usp_CancelOrder]&#xD;&#xA;    @OrderID INT&#xD;&#xA;AS" />
+			</Annotation>
+		</Element>
 		<Element Type="SqlProcedure" Name="[dbo].[usp_GetCustomerOrders]">
 			<Property Name="BodyScript">
 				<Value><![CDATA[
