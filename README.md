@@ -2,7 +2,7 @@
 
 ![SQL Server 2022](https://img.shields.io/badge/Engine-SQL%20Server%202022-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white)
 ![Docker](https://img.shields.io/badge/Environment-Docker%20Container-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Status](https://img.shields.io/badge/Estado-M%C3%B3dulo%201%20Completado-2EA44F?style=for-the-badge)
+![Status](https://img.shields.io/badge/ESTADO-TODOS_LOS_M%C3%93DULOS_COMPLETADOS-2ea44f?style=for-the-badge)
 ![Academic Level](https://img.shields.io/badge/Nivel-Maestr%C3%ADa%20UTP-102A43?style=for-the-badge)
 
 ---
@@ -59,4 +59,5 @@ proyecto-sql-seguridad/
 ├── ci-cd/                          # Pipelines y scripts de validación automatizada de esquemas
 ├── evidencias-pdf/                 # Informes ejecutivos con portada institucional UTP y capturas verificadas
 └── README.md                       # Documentación técnica principal del proyecto
+
 
